@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rimages ⚡️ - Local Image Compression</title>
+    <style>
+      /* PALETTE (Unchanged) */
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-alt: #f1f5f9;
+
+        --primary: #10b981;
+        --primary-hover: #059669;
+        --primary-light: #d1fae5;
+
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+
+        --border: #e2e8f0;
+        --focus-ring: rgba(16, 185, 129, 0.3);
+
+        --radius: 16px;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md:
+          0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg:
+          0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+
+        --font-stack:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text-main);
+        font-family: var(--font-stack);
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Utilities */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .text-center {
+        text-align: center;
+      }
+
+      .gradient-text {
+        background: linear-gradient(
+          135deg,
+          var(--text-main) 0%,
+          var(--primary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        background: rgba(248, 250, 252, 0.8);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      /* New class for header icon styling */
+      .logo-icon {
+        color: var(--primary);
+        background: var(--primary-light);
+        padding: 4px;
+        border-radius: 6px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+        margin-left: 20px;
+      }
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      /* Hero */
+      .hero {
+        padding: 100px 0 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+
+      h1 {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        letter-spacing: -0.03em;
+        color: var(--text-main);
+      }
+
+      .subtitle {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto 40px;
+        font-weight: 400;
+      }
+
+      /* Buttons */
+      .cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 50px;
+      }
+
+      .btn {
+        padding: 14px 28px;
+        border-radius: var(--radius);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: var(--shadow-md);
+      }
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-secondary {
+        background-color: var(--surface);
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+      }
+      .btn-secondary:hover {
+        background-color: var(--surface-alt);
+        border-color: var(--text-muted);
+      }
+
+      /* Code Block */
+      .code-snippet {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 24px;
+        font-family: "SF Mono", "Fira Code", monospace;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 80px;
+        box-shadow: var(--shadow-md);
+        position: relative; /* Needed for absolute positioning of feedback */
+      }
+
+      .code-text {
+        color: var(--text-main);
+        font-weight: 500;
+      }
+      .copy-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-muted);
+        padding: 4px;
+        transition: color 0.2s;
+        display: flex; /* Center SVG */
+      }
+      .copy-btn:hover {
+        color: var(--primary);
+      }
+
+      /* App Preview */
+      .app-preview-wrapper {
+        perspective: 1200px;
+        margin-bottom: 100px;
+        padding: 0 20px;
+      }
+
+      .app-preview {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: var(--radius);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12);
+        transform: rotateX(5deg);
+        transition: transform 0.5s ease;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16/10;
+      }
+
+      .app-preview:hover {
+        transform: rotateX(0deg) scale(1.01);
+      }
+
+      .app-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* Placeholder UI */
+      .placeholder-ui {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-alt);
+        position: relative;
+      }
+      .window-controls {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Features */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-bottom: 100px;
+      }
+
+      .feature-card {
+        background: var(--surface);
+        padding: 30px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-light);
+      }
+
+      .feature-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        color: var(--text-main);
+        font-weight: 700;
+      }
+      .feature-card p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+      }
+
+      /* UPDATED ICON STYLING FOR SVGs */
+      .icon {
+        margin-bottom: 15px;
+        display: inline-flex; /* Changed from block to inline-flex for centering */
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-light);
+        width: 48px;
+        height: 48px; /* Slightly larger */
+        border-radius: 12px;
+        color: var(--primary); /* Icon color */
+      }
+
+      /* Stack */
+      .stack-section {
+        border-top: 1px solid var(--border);
+        padding: 60px 0;
+        background: var(--surface-alt);
+        margin-bottom: 0;
+      }
+      .stack-list {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+      }
+
+      footer {
+        background: var(--surface-alt);
+        padding: 40px 0;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--border);
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+        .code-snippet {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          width: 100%;
+          overflow-x: auto;
+        }
+        .copy-btn {
+          align-self: flex-end;
+        }
+        #copy-feedback {
+          right: 0;
+          top: -25px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          Rimages
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="logo-icon"
+          >
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+        </div>
+        <nav>
+          <a href="https://github.com/niamorweb/rimages" class="nav-link"
+            >GitHub</a
+          >
+        </nav>
+      </header>
+    </div>
+
+    <main>
+      <div class="container">
+        <section class="hero">
+          <h1 class="animate text-center">
+            Image Compression.<br /><span class="gradient-text"
+              >Instant. Private.</span
+            >
+          </h1>
+          <p class="subtitle animate delay-1 text-center">
+            Optimize your JPG, PNG, WebP, and AVIF files without ever sending a
+            single byte to the cloud. The power of Rust, the elegance of React.
+          </p>
+
+          <div class="cta-group animate delay-2">
+            <a href="#" class="btn btn-primary">
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                ></path>
+              </svg>
+              Download App
+            </a>
+            <a
+              href="https://github.com/niamorweb/rimages"
+              class="btn btn-secondary"
+            >
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+              View Code
+            </a>
+          </div>
+
+          <div class="code-snippet animate delay-3">
+            <span class="code-text"
+              >$ git clone https://github.com/niamorweb/rimages.git</span
+            >
+            <button class="copy-btn" onclick="copyCode()" title="Copy">
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+            <span
+              id="copy-feedback"
+              style="
+                position: absolute;
+                right: -80px;
+                font-size: 0.8rem;
+                color: var(--primary);
+                opacity: 0;
+                transition: opacity 0.2s;
+                font-weight: bold;
+              "
+              >Copied!</span
+            >
+          </div>
+        </section>
+
+        <div class="app-preview-wrapper animate delay-3">
+          <div class="app-preview">
+            <div class="placeholder-ui">
+              <div class="window-controls">
+                <div class="dot" style="background: #ff5f56"></div>
+                <div class="dot" style="background: #ffbd2e"></div>
+                <div class="dot" style="background: #27c93f"></div>
+              </div>
+              <img
+                src="./assets/demo-compressed.webp"
+                alt="Demo screenshot of Rimages app"
+              />
+            </div>
+          </div>
+        </div>
+
+        <section class="features">
+          <div class="feature-card">
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 20v2" />
+                <path d="M12 2v2" />
+                <path d="M17 20v2" />
+                <path d="M17 2v2" />
+                <path d="M2 12h2" />
+                <path d="M2 17h2" />
+                <path d="M2 7h2" />
+                <path d="M20 12h2" />
+                <path d="M20 17h2" />
+                <path d="M20 7h2" />
+                <path d="M7 20v2" />
+                <path d="M7 2v2" />
+                <rect x="4" y="4" width="16" height="16" rx="2" />
+                <rect x="8" y="8" width="8" height="8" rx="1" />
+              </svg>
+            </span>
+            <h3>Lightning Fast</h3>
+            <p>
+              Multi-threaded architecture powered by <code>Rayon</code>.
+              Utilizes 100% of your CPU for instant parallel compression.
+            </p>
+          </div>
+          <div class="feature-card">
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <h3>100% Offline</h3>
+            <p>
+              Your photos never leave your machine. Total privacy guaranteed by
+              a local Tauri v2 architecture.
+            </p>
+          </div>
+          <div class="feature-card">
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect width="14" height="8" x="5" y="2" rx="2" />
+                <rect width="20" height="8" x="2" y="14" rx="2" />
+                <path d="M6 18h2" />
+                <path d="M12 18h6" />
+              </svg>
+            </span>
+            <h3>Smart Optimization</h3>
+            <p>
+              Combines <code>ravif</code> for speed and
+              <code>imagequant</code> for intelligent color reduction.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <section class="stack-section text-center">
+        <div class="container">
+          <div class="stack-list">
+            <span>Rust</span>
+            <span>Tauri v2</span>
+            <span>React</span>
+            <span>TypeScript</span>
+            <span>Vite</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2024 Rimages. Open Source under MIT license.</p>
+    </footer>
+
+    <script>
+      function copyCode() {
+        const code = "git clone https://github.com/niamorweb/rimages.git";
+        navigator.clipboard.writeText(code).then(() => {
+          const feedback = document.getElementById("copy-feedback");
+          feedback.style.opacity = "1";
+          setTimeout(() => {
+            feedback.style.opacity = "0";
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html>
