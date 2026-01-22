@@ -3,31 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Optimize your JPG, PNG, WebP, and AVIF files without ever sending a
+            single byte to the cloud. The power of Rust, the elegance of React."
+    />
+    <title>rimages - The free Open Source images compression solution</title>
+
     <title>Rimages ⚡️ - Local Image Compression</title>
     <style>
-      /* PALETTE (Unchanged) */
       :root {
         --bg: #f8fafc;
         --surface: #ffffff;
         --surface-alt: #f1f5f9;
-
-        --primary: #10b981;
+        --primary: #105740;
         --primary-hover: #059669;
         --primary-light: #d1fae5;
-
         --text-main: #1e293b;
-        --text-muted: #64748b;
-
+        --text-muted: #2a323c;
         --border: #e2e8f0;
         --focus-ring: rgba(16, 185, 129, 0.3);
-
         --radius: 16px;
         --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         --shadow-md:
           0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         --shadow-lg:
           0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-
         --font-stack:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
           Arial, sans-serif;
@@ -48,7 +49,6 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* Utilities */
       .container {
         max-width: 1000px;
         margin: 0 auto;
@@ -59,16 +59,9 @@
       }
 
       .gradient-text {
-        background: linear-gradient(
-          135deg,
-          var(--text-main) 0%,
-          var(--primary) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--primary);
       }
 
-      /* Header */
       header {
         display: flex;
         justify-content: space-between;
@@ -83,20 +76,21 @@
 
       .logo {
         font-weight: 800;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         color: var(--text-main);
         display: flex;
         align-items: center;
         gap: 8px;
+        margin-bottom: 20px;
       }
-      /* New class for header icon styling */
+
       .logo-icon {
         color: var(--primary);
         background: var(--primary-light);
-        padding: 4px;
-        border-radius: 6px;
-        width: 32px;
-        height: 32px;
+        padding: 8px;
+        border-radius: 10px;
+        width: 40px;
+        height: 40px;
       }
 
       .nav-link {
@@ -111,7 +105,6 @@
         color: var(--primary);
       }
 
-      /* Hero */
       .hero {
         padding: 100px 0 60px;
         display: flex;
@@ -137,7 +130,6 @@
         font-weight: 400;
       }
 
-      /* Buttons */
       .cta-group {
         display: flex;
         gap: 16px;
@@ -180,7 +172,6 @@
         border-color: var(--text-muted);
       }
 
-      /* Code Block */
       .code-snippet {
         background: var(--surface);
         border: 1px solid var(--border);
@@ -193,7 +184,7 @@
         gap: 15px;
         margin-bottom: 80px;
         box-shadow: var(--shadow-md);
-        position: relative; /* Needed for absolute positioning of feedback */
+        position: relative;
       }
 
       .code-text {
@@ -207,13 +198,12 @@
         color: var(--text-muted);
         padding: 4px;
         transition: color 0.2s;
-        display: flex; /* Center SVG */
+        display: flex;
       }
       .copy-btn:hover {
         color: var(--primary);
       }
 
-      /* App Preview */
       .app-preview-wrapper {
         perspective: 1200px;
         margin-bottom: 100px;
@@ -240,7 +230,6 @@
         display: block;
       }
 
-      /* Placeholder UI */
       .placeholder-ui {
         width: 100%;
         height: 100%;
@@ -265,7 +254,6 @@
         border: 1px solid rgba(0, 0, 0, 0.1);
       }
 
-      /* Features */
       .features {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -287,7 +275,7 @@
         border-color: var(--primary-light);
       }
 
-      .feature-card h3 {
+      .feature-card h2 {
         font-size: 1.1rem;
         margin-bottom: 10px;
         color: var(--text-main);
@@ -298,20 +286,18 @@
         color: var(--text-muted);
       }
 
-      /* UPDATED ICON STYLING FOR SVGs */
       .icon {
         margin-bottom: 15px;
-        display: inline-flex; /* Changed from block to inline-flex for centering */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         background: var(--primary-light);
         width: 48px;
-        height: 48px; /* Slightly larger */
+        height: 48px;
         border-radius: 12px;
-        color: var(--primary); /* Icon color */
+        color: var(--primary);
       }
 
-      /* Stack */
       .stack-section {
         border-top: 1px solid var(--border);
         padding: 60px 0;
@@ -353,42 +339,56 @@
         .copy-btn {
           align-self: flex-end;
         }
+        .cta-group a {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         #copy-feedback {
           right: 0;
           top: -25px;
+        }
+        .app-preview-wrapper {
+          padding: 0;
+        }
+        .logo {
+          font-size: 1rem;
+        }
+
+        .logo-icon {
+          padding: 4px;
+          border-radius: 6px;
+          width: 32px;
+          height: 32px;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <div class="logo">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="logo-icon"
-          >
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Rimages
-        </div>
-      </header>
-    </div>
-
     <main>
       <div class="container">
         <section class="hero">
+          <div class="logo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="logo-icon"
+            >
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            rimages
+          </div>
           <h1 class="animate text-center">
-            Image Compression.<br /><span class="gradient-text"
-              >Instant. Private.</span
+            Image Compressor.<br /><span class="gradient-text"
+              >Instant. Private. Free.</span
             >
           </h1>
           <p class="subtitle animate delay-1 text-center">
@@ -423,19 +423,22 @@
               class="btn btn-secondary"
             >
               <svg
-                width="20"
-                height="20"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                viewBox="0 0 24 24"
               >
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+                />
+                <path d="M9 18c-4.51 2-5-2-7-2" />
               </svg>
-              View Code
+              Source code
             </a>
           </div>
 
@@ -517,7 +520,7 @@
                 <rect x="8" y="8" width="8" height="8" rx="1" />
               </svg>
             </span>
-            <h3>Lightning Fast</h3>
+            <h2>Lightning Fast</h2>
             <p>
               Multi-threaded architecture powered by <code>Rayon</code>.
               Utilizes 100% of your CPU for instant parallel compression.
@@ -540,7 +543,7 @@
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             </span>
-            <h3>100% Offline</h3>
+            <h2>100% Offline</h2>
             <p>
               Your photos never leave your machine. Total privacy guaranteed by
               a local Tauri v2 architecture.
@@ -565,7 +568,7 @@
                 <path d="M12 18h6" />
               </svg>
             </span>
-            <h3>Smart Optimization</h3>
+            <h2>Smart Optimization</h2>
             <p>
               Combines <code>ravif</code> for speed and
               <code>imagequant</code> for intelligent color reduction.
@@ -573,22 +576,10 @@
           </div>
         </section>
       </div>
-
-      <section class="stack-section text-center">
-        <div class="container">
-          <div class="stack-list">
-            <span>Rust</span>
-            <span>Tauri v2</span>
-            <span>React</span>
-            <span>TypeScript</span>
-            <span>Vite</span>
-          </div>
-        </div>
-      </section>
     </main>
 
     <footer>
-      <p>© 2024 Rimages. Open Source under MIT license.</p>
+      <p>© 2026 rimages. Open Source under GLP-3.0 license.</p>
     </footer>
 
     <script>
