@@ -228,15 +228,9 @@
         background: var(--surface);
         border: 1px solid var(--border);
         box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12);
-        transform: rotateX(5deg);
-        transition: transform 0.5s ease;
         position: relative;
         overflow: hidden;
         aspect-ratio: 16/10;
-      }
-
-      .app-preview:hover {
-        transform: rotateX(0deg) scale(1.01);
       }
 
       .app-preview img {
@@ -370,7 +364,6 @@
     <div class="container">
       <header>
         <div class="logo">
-          Rimages
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -385,12 +378,8 @@
           >
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
           </svg>
+          Rimages
         </div>
-        <nav>
-          <a href="https://github.com/niamorweb/rimages" class="nav-link"
-            >GitHub</a
-          >
-        </nav>
       </header>
     </div>
 
@@ -485,11 +474,6 @@
         <div class="app-preview-wrapper animate delay-3">
           <div class="app-preview">
             <div class="placeholder-ui">
-              <div class="window-controls">
-                <div class="dot" style="background: #ff5f56"></div>
-                <div class="dot" style="background: #ffbd2e"></div>
-                <div class="dot" style="background: #27c93f"></div>
-              </div>
               <img
                 src="./assets/demo-compressed.webp"
                 alt="Demo screenshot of Rimages app"
