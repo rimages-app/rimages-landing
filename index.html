@@ -61,6 +61,59 @@
         color: var(--primary);
       }
 
+      .dropdown-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 200px; /* Assez large pour le texte */
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.2s ease;
+        z-index: 50;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+
+      .dropdown-item:hover {
+        background: var(--surface-alt);
+        color: var(--primary);
+      }
+
+      .item-icon {
+        color: var(--text-muted);
+      }
+      .dropdown-item:hover .item-icon {
+        color: var(--primary);
+      }
+
+      .dropdown-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
       header {
         display: flex;
         justify-content: space-between;
@@ -153,6 +206,7 @@
         background-color: var(--primary);
         color: white;
         box-shadow: var(--shadow-md);
+        border: var(--primary);
       }
       .btn-primary:hover {
         background-color: var(--primary-hover);
@@ -396,27 +450,105 @@
           </p>
 
           <div class="cta-group animate delay-2">
-            <a
-              href="https://github.com/niamorweb/rimages/releases/download/v0.1.0/tauri-app_0.1.0_aarch64.dmg"
-              class="btn btn-primary"
-              download
-            >
-              <svg
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                ></path>
-              </svg>
-              Download for Mac Silicon
-            </a>
+            <div class="dropdown-container">
+              <button class="btn btn-primary" onclick="toggleDropdown(event)">
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+                Download
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  style="margin-left: 4px; opacity: 0.8"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div class="dropdown-menu" id="dl-menu">
+                <a
+                  href="https://github.com/niamorweb/rimages/releases/download/v0.1.0/rimages_0.1.0_aarch64.dmg"
+                  class="dropdown-item"
+                  ><svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    {...props}
+                  >
+                    <path
+                      d="M24.4683 11.4806C24.3755 11.5336 22.1672 12.6504 22.1672 15.1268C22.2712 17.951 24.954 18.9414 25 18.9414C24.954 18.9943 24.595 20.2906 23.5315 21.6494C22.6876 22.8199 21.7508 24 20.3284 24C18.9753 24 18.4896 23.2199 16.9284 23.2199C15.2517 23.2199 14.7773 24 13.4937 24C12.0712 24 11.0651 22.7567 10.1751 21.5972C9.0189 20.0796 8.03616 17.6981 8.00146 15.4114C7.97808 14.1996 8.23301 13.0085 8.88013 11.9968C9.79348 10.5844 11.4241 9.6256 13.2048 9.59398C14.5692 9.55205 15.7835 10.4476 16.6161 10.4476C17.4141 10.4476 18.9059 9.59398 20.5939 9.59398C21.3224 9.59467 23.2653 9.79468 24.4683 11.4806ZM16.5007 9.35205C16.2579 8.24548 16.9284 7.13891 17.5529 6.43304C18.3508 5.5794 19.6111 5 20.6979 5C20.7673 6.10657 20.3276 7.19183 19.5417 7.98224C18.8365 8.83588 17.6223 9.47851 16.5007 9.35205Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  macOS Silicon
+                </a>
+                <a
+                  href="https://github.com/niamorweb/rimages/releases/download/v0.1.0/rimages_0.1.0_x64-setup.exe"
+                  class="dropdown-item"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    {...props}
+                  >
+                    <rect
+                      x="17"
+                      y="17"
+                      width="10"
+                      height="10"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="5"
+                      y="17"
+                      width="10"
+                      height="10"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="17"
+                      y="5"
+                      width="10"
+                      height="10"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="5"
+                      y="5"
+                      width="10"
+                      height="10"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Windows
+                </a>
+              </div>
+            </div>
+
             <a
               href="https://github.com/niamorweb/rimages"
               class="btn btn-secondary"
@@ -592,6 +724,20 @@
           }, 2000);
         });
       }
+
+      function toggleDropdown(event) {
+        event.stopPropagation();
+
+        const menu = document.querySelector(".dropdown-menu");
+        menu.classList.toggle("show");
+      }
+
+      window.onclick = function (event) {
+        const menu = document.querySelector(".dropdown-menu");
+        if (menu.classList.contains("show")) {
+          menu.classList.remove("show");
+        }
+      };
     </script>
   </body>
 </html>
