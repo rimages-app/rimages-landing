@@ -771,6 +771,7 @@
 
     <script>
       function copyCode() {
+        posthog.capture("cta_copy_code_clicked");
         const code = "git clone https://github.com/niamorweb/rimages.git";
         navigator.clipboard.writeText(code).then(() => {
           const feedback = document.getElementById("copy-feedback");
@@ -783,6 +784,7 @@
 
       function toggleDropdown(event) {
         event.stopPropagation();
+        posthog.capture("cta_download_dropdown_clicked");
 
         const menu = document.querySelector(".dropdown-menu");
         menu.classList.toggle("show");
